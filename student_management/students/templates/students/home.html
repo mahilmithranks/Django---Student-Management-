@@ -2,140 +2,128 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Student Management Dashboard</title>
+    <title>Student Management API</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to right, #74ebd5, #acb6e5);
+            text-align: center;
             margin: 0;
             padding: 0;
-            color: #333;
+            background: linear-gradient(to right, #74ebd5, #ACB6E5);
+            min-height: 100vh;
         }
-        h1 {
-            text-align: center;
-            margin-top: 40px;
-            color: #fff;
-            text-shadow: 1px 1px 3px #000;
-        }
-        h2 {
-            text-align: center;
-            color: #fff;
-            margin-top: 30px;
-            text-shadow: 1px 1px 2px #000;
-        }
+        h1 { color: #2c3e50; margin-top: 20px; }
         a {
             display: inline-block;
-            margin: 10px;
-            padding: 10px 20px;
-            background: #ff6b6b;
+            margin: 10px 10px;
+            padding: 12px 25px;
+            background: #3498db;
             color: white;
             text-decoration: none;
-            border-radius: 50px;
+            border-radius: 8px;
             font-weight: bold;
             transition: 0.3s;
         }
-        a:hover { background: #ff4757; }
+        a:hover { background: #2980b9; }
         form {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 20px;
-            width: 400px;
-            margin: 20px auto;
-            box-shadow: 0px 10px 25px rgba(0,0,0,0.2);
-            transition: transform 0.3s;
+            margin: 30px auto;
+            background: #fff;
+            padding: 30px 20px;
+            border-radius: 12px;
+            width: 350px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
         }
-        form:hover { transform: translateY(-5px); }
         input, select {
             display: block;
             width: 90%;
-            margin: 15px auto;
-            padding: 12px;
-            border-radius: 8px;
+            margin: 10px auto;
+            padding: 10px;
             border: 1px solid #ccc;
-            font-size: 16px;
-            transition: border 0.3s;
+            border-radius: 6px;
+            font-size: 14px;
         }
-        input:focus, select:focus { border-color: #ff6b6b; outline: none; }
-        #submitBtn {
-            display: block;
-            margin: 20px auto 0 auto;
+        button {
             padding: 12px 25px;
-            background: #1dd1a1;
+            background: #2ecc71;
             color: white;
-            font-weight: bold;
             border: none;
-            border-radius: 50px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
             transition: 0.3s;
         }
-        #submitBtn:hover { background: #10ac84; }
-        .toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #1dd1a1;
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0px 5px 20px rgba(0,0,0,0.3);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s, transform 0.5s;
-            z-index: 1000;
+        button:hover { background: #27ae60; }
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #e74c3c;
         }
-        .toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
         table {
             margin: 30px auto;
             border-collapse: collapse;
-            width: 95%;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
+            width: 90%;
+            max-width: 900px;
+            background: white;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0px 10px 25px rgba(0,0,0,0.2);
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
         }
-        table th, table td {
-            padding: 15px;
-            text-align: center;
-            font-size: 16px;
-            transition: background 0.3s, transform 0.3s;
-        }
-        table th {
-            background: linear-gradient(to right, #ff6b6b, #ff4757);
-            color: white;
-            font-weight: bold;
-        }
-        table tr:nth-child(even) { background: linear-gradient(to right, #dff9fb, #c7ecee); }
-        table tr:nth-child(odd) { background: linear-gradient(to right, #f1f2f6, #dfe4ea); }
-        table tr:hover {
-            background: linear-gradient(to right, #ffeaa7, #fab1a0);
-            transform: scale(1.02);
-        }
-        .delete-btn, .edit-btn {
-            padding: 6px 10px;
+        table th, table td { border: 1px solid #ddd; padding: 12px; text-align: center; }
+        table th { background: #3498db; color: white; font-size: 16px; }
+        table td button {
+            padding: 5px 10px;
             border: none;
             border-radius: 5px;
-            color: white;
             cursor: pointer;
             margin: 0 2px;
-            transition: 0.3s;
         }
-        .delete-btn { background: #ee5253; }
-        .delete-btn:hover { background: #c23616; }
-        .edit-btn { background: #feca57; color: #000; }
-        .edit-btn:hover { background: #ff9f43; }
-        @media (max-width: 768px) {
-            form, table { width: 95%; }
-            a { margin: 5px; padding: 8px 15px; }
+        .edit-btn { background: #f39c12; color: white; }
+        .edit-btn:hover { background: #e67e22; }
+        .delete-btn { background: #e74c3c; color: white; }
+        .delete-btn:hover { background: #c0392b; }
+
+        /* Toast styles */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+        }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+
+        /* Modal styles */
+        #editModal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center; align-items: center;
+        }
+        #editModal div {
+            background: #fff; padding: 30px; border-radius: 12px; width: 350px; position: relative;
         }
     </style>
 </head>
 <body>
-    <h1>Student Management Dashboard</h1>
-    <p style="text-align:center;">
+    <h1>Welcome to Student Management API</h1>
+    <div>
         <a href="/api/students/">Students API</a>
         <a href="/admin/">Admin Panel</a>
-    </p>
+    </div>
 
     <h2>Add a New Student</h2>
     <form id="studentForm">
@@ -144,47 +132,101 @@
         <input type="email" id="email" placeholder="Enter email" required>
         <select id="department" required>
             <option value="">Select Department</option>
-            <option value="CSE">Computer Science</option>
-            <option value="ECE">Electronics</option>
-            <option value="EEE">Electrical</option>
-            <option value="MECH">Mechanical</option>
-            <option value="CIVIL">Civil</option>
-            <option value="IT">Information Technology</option>
-            <option value="BIO">Biotechnology</option>
-            <option value="CHEM">Chemical</option>
-            <option value="AERO">Aeronautical</option>
-            <option value="META">Metallurgical</option>
-            <option value="ARCH">Architecture</option>
-            <option value="Kalvium">SPE Kalvium</option>
+            <option value="1">CSE</option>
+            <option value="2">ECE</option>
+            <option value="3">EEE</option>
+            <option value="4">MECH</option>
+            <option value="5">CIVIL</option>
+            <option value="6">IT</option>
+            <option value="7">BIO</option>
+            <option value="8">CHEM</option>
+            <option value="9">AERO</option>
+            <option value="10">META</option>
+            <option value="11">ARCH</option>
+            <option value="12">Kalvium</option>
         </select>
-        <button type="submit" id="submitBtn">Add Student</button>
+        <select id="course" required>
+            <option value="">Select Course</option>
+        </select>
+        <button type="submit">Add Student</button>
     </form>
-
-    <div class="toast" id="toast"></div>
 
     <h2>Student List</h2>
     <table id="studentTable">
         <thead>
             <tr>
-                <th>User ID</th>
+                <th>ID</th>
                 <th>Name</th>
                 <th>Age</th>
                 <th>Email</th>
                 <th>Department</th>
-                <th>Action</th>
+                <th>Course</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody></tbody>
     </table>
 
+    <!-- Edit Student Modal -->
+    <div id="editModal">
+        <div>
+            <h2>Edit Student</h2>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <input type="text" id="editName" placeholder="Enter name" required>
+                <input type="number" id="editAge" placeholder="Enter age" required>
+                <input type="email" id="editEmail" placeholder="Enter email" required>
+                <select id="editDepartment" required>
+                    <option value="">Select Department</option>
+                    <option value="1">CSE</option>
+                    <option value="2">ECE</option>
+                    <option value="3">EEE</option>
+                    <option value="4">MECH</option>
+                    <option value="5">CIVIL</option>
+                    <option value="6">IT</option>
+                    <option value="7">BIO</option>
+                    <option value="8">CHEM</option>
+                    <option value="9">AERO</option>
+                    <option value="10">META</option>
+                    <option value="11">ARCH</option>
+                    <option value="12">Kalvium</option>
+                </select>
+                <select id="editCourse" required>
+                    <option value="">Select Course</option>
+                </select>
+                <button type="submit">Update Student</button>
+                <button type="button" style="background:#e74c3c; margin-left:10px;" onclick="closeEditModal()">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast"></div>
+
     <script>
-        let editStudentId = null;
-        function showToast(message, success=true) {
-            const toast = document.getElementById("toast");
-            toast.innerText = message;
-            toast.style.background = success ? "#1dd1a1" : "#ee5253";
-            toast.classList.add("show");
-            setTimeout(() => { toast.classList.remove("show"); }, 3000);
+        function showToast(msg, success=true) {
+            let toast = document.getElementById("toast");
+            toast.innerText = msg;
+            toast.style.backgroundColor = success ? "#2ecc71" : "#e74c3c";
+            toast.className = "show";
+            setTimeout(() => toast.className = toast.className.replace("show",""), 3000);
+        }
+
+        async function loadCourses() {
+            try {
+                let response = await fetch("/api/courses/");
+                let courses = await response.json();
+                let courseSelect = document.getElementById("course");
+                let editCourseSelect = document.getElementById("editCourse");
+                courses.forEach(c => {
+                    let option = document.createElement("option");
+                    option.value = c.id;
+                    option.text = c.name;
+                    courseSelect.appendChild(option);
+                    let editOption = option.cloneNode(true);
+                    editCourseSelect.appendChild(editOption);
+                });
+            } catch (err) { console.error("Failed to load courses:", err); }
         }
 
         document.getElementById("studentForm").addEventListener("submit", async function(e) {
@@ -193,36 +235,27 @@
                 name: document.getElementById("name").value,
                 age: document.getElementById("age").value,
                 email: document.getElementById("email").value,
-                department: document.getElementById("department").value
+                department: document.getElementById("department").value,
+                course: document.getElementById("course").value
             };
-
             try {
-                let url = "/api/students/";
-                let method = "POST";
-                if (editStudentId) {
-                    url += editStudentId + "/";
-                    method = "PUT";
-                }
-
-                let response = await fetch(url, {
-                    method: method,
-                    headers: { "Content-Type": "application/json", "X-CSRFToken": getCookie("csrftoken") },
+                let response = await fetch("/api/students/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
                     body: JSON.stringify(studentData)
                 });
-
                 if (response.ok) {
-                    showToast(editStudentId ? "✅ Student updated successfully!" : "✅ Student added successfully!");
+                    showToast("✅ Student added successfully!");
                     document.getElementById("studentForm").reset();
-                    document.getElementById("submitBtn").innerText = "Add Student";
-                    editStudentId = null;
                     loadStudents();
                 } else {
                     let error = await response.json();
-                    showToast("❌ Error: " + JSON.stringify(error), false);
+                    showToast("❌ Error: "+JSON.stringify(error), false);
                 }
-            } catch {
-                showToast("⚠️ Something went wrong!", false);
-            }
+            } catch (err) { showToast("⚠️ Something went wrong!", false); }
         });
 
         async function loadStudents() {
@@ -231,67 +264,102 @@
                 let students = await response.json();
                 let tbody = document.querySelector("#studentTable tbody");
                 tbody.innerHTML = "";
-
-                students.forEach(student => {
-                    let row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${student.id}</td>
-                        <td>${student.name}</td>
-                        <td>${student.age}</td>
-                        <td>${student.email}</td>
-                        <td>${student.department}</td>
+                students.forEach(s => {
+                    let row = `<tr>
+                        <td>${s.id}</td>
+                        <td>${s.name}</td>
+                        <td>${s.age}</td>
+                        <td>${s.email}</td>
+                        <td>${s.department_name}</td>
+                        <td>${s.course_name}</td>
                         <td>
-                            <button class="edit-btn" onclick="editStudent(${student.id})">✏️</button>
-                            <button class="delete-btn" onclick="deleteStudent(${student.id})">❌</button>
+                            <button class="edit-btn" onclick="editStudent(${s.id})">✏️</button>
+                            <button class="delete-btn" onclick="deleteStudent(${s.id})">❌</button>
                         </td>
-                    `;
-                    tbody.appendChild(row);
+                    </tr>`;
+                    tbody.innerHTML += row;
                 });
-            } catch (err) { console.error("Error loading students:", err); }
-        }
-
-        function editStudent(id) {
-            fetch(`/api/students/${id}/`)
-                .then(res => res.json())
-                .then(student => {
-                    document.getElementById("name").value = student.name;
-                    document.getElementById("age").value = student.age;
-                    document.getElementById("email").value = student.email;
-                    document.getElementById("department").value = student.department;
-                    document.getElementById("submitBtn").innerText = "Update Student";
-                    editStudentId = id;
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                });
+            } catch (err) { console.error(err); }
         }
 
         async function deleteStudent(id) {
-            if (!confirm("Are you sure you want to delete this student?")) return;
+            if(!confirm("Are you sure you want to delete this student?")) return;
             try {
-                let response = await fetch(`/api/students/${id}/`, { method: "DELETE", headers: { "X-CSRFToken": getCookie("csrftoken") } });
-                if (response.ok) {
-                    showToast("🗑️ Student deleted successfully!");
-                    loadStudents();
-                } else showToast("❌ Failed to delete student!", false);
-            } catch {
-                showToast("⚠️ Something went wrong!", false);
-            }
+                let response = await fetch(`/api/students/${id}/`, {
+                    method: "DELETE",
+                    headers: { "X-CSRFToken": getCookie("csrftoken") }
+                });
+                if(response.ok) { showToast("✅ Student deleted successfully!"); loadStudents(); }
+                else showToast("❌ Failed to delete student!", false);
+            } catch(err) { showToast("⚠️ Something went wrong!", false); }
         }
 
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== "") {
-                let cookies = document.cookie.split(";");
-                for (let cookie of cookies) {
-                    cookie = cookie.trim();
-                    if (cookie.startsWith(name + "=")) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
+                document.cookie.split(";").forEach(cookie => {
+                    if (cookie.trim().startsWith(name + "=")) {
+                        cookieValue = decodeURIComponent(cookie.trim().substring(name.length+1));
                     }
-                }
+                });
             }
             return cookieValue;
         }
 
+        // Edit student modal functions
+        function editStudent(id) {
+            const student = Array.from(document.querySelectorAll("#studentTable tbody tr"))
+                .find(row => row.cells[0].innerText == id);
+            document.getElementById("editId").value = id;
+            document.getElementById("editName").value = student.cells[1].innerText;
+            document.getElementById("editAge").value = student.cells[2].innerText;
+            document.getElementById("editEmail").value = student.cells[3].innerText;
+
+            const deptName = student.cells[4].innerText;
+            let deptSelect = document.getElementById("editDepartment");
+            Array.from(deptSelect.options).forEach(opt => { opt.selected = (opt.text==deptName); });
+
+            const courseName = student.cells[5].innerText;
+            let courseSelect = document.getElementById("editCourse");
+            Array.from(courseSelect.options).forEach(opt => { opt.selected = (opt.text==courseName); });
+
+            document.getElementById("editModal").style.display = "flex";
+        }
+
+        function closeEditModal() { document.getElementById("editModal").style.display = "none"; }
+
+        document.getElementById("editForm").addEventListener("submit", async function(e){
+            e.preventDefault();
+            let id = document.getElementById("editId").value;
+            let studentData = {
+                name: document.getElementById("editName").value,
+                age: document.getElementById("editAge").value,
+                email: document.getElementById("editEmail").value,
+                department: document.getElementById("editDepartment").value,
+                course: document.getElementById("editCourse").value
+            };
+            try {
+                let response = await fetch(`/api/students/${id}/`, {
+                    method:"PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    body: JSON.stringify(studentData)
+                });
+                if(response.ok) {
+                    showToast("✅ Student updated successfully!");
+                    closeEditModal();
+                    loadStudents();
+                } else {
+                    let error = await response.json();
+                    showToast("❌ Error: "+JSON.stringify(error), false);
+                }
+            } catch(err) { showToast("⚠️ Something went wrong!", false); }
+        });
+
+        // Initial load
+        loadCourses();
         loadStudents();
     </script>
 </body>
