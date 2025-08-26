@@ -6,65 +6,79 @@
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0f2f5;
+            background: linear-gradient(to right, #74ebd5, #acb6e5);
             margin: 0;
             padding: 0;
             color: #333;
         }
-        h1 { text-align: center; margin-top: 40px; color: #2c3e50; }
-        h2 { text-align: center; color: #34495e; margin-top: 30px; }
+        h1 {
+            text-align: center;
+            margin-top: 40px;
+            color: #fff;
+            text-shadow: 1px 1px 3px #000;
+        }
+        h2 {
+            text-align: center;
+            color: #fff;
+            margin-top: 30px;
+            text-shadow: 1px 1px 2px #000;
+        }
         a {
             display: inline-block;
             margin: 10px;
             padding: 10px 20px;
-            background: #3498db;
+            background: #ff6b6b;
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 50px;
+            font-weight: bold;
             transition: 0.3s;
         }
-        a:hover { background: #2980b9; }
+        a:hover { background: #ff4757; }
         form {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             padding: 30px;
-            border-radius: 10px;
-            width: 350px;
+            border-radius: 20px;
+            width: 400px;
             margin: 20px auto;
-            box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0px 10px 25px rgba(0,0,0,0.2);
             transition: transform 0.3s;
         }
         form:hover { transform: translateY(-5px); }
         input, select {
             display: block;
             width: 90%;
-            margin: 12px auto;
-            padding: 10px;
-            border-radius: 5px;
+            margin: 15px auto;
+            padding: 12px;
+            border-radius: 8px;
             border: 1px solid #ccc;
             font-size: 16px;
             transition: border 0.3s;
         }
-        input:focus, select:focus { border-color: #3498db; outline: none; }
-        button {
-            padding: 12px 20px;
-            background: #2ecc71;
+        input:focus, select:focus { border-color: #ff6b6b; outline: none; }
+        #submitBtn {
+            display: block;
+            margin: 20px auto 0 auto;
+            padding: 12px 25px;
+            background: #1dd1a1;
             color: white;
+            font-weight: bold;
             border: none;
-            border-radius: 5px;
+            border-radius: 50px;
             cursor: pointer;
             font-size: 16px;
-            transition: background 0.3s;
+            transition: 0.3s;
         }
-        button:hover { background: #27ae60; }
+        #submitBtn:hover { background: #10ac84; }
         .toast {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #2ecc71;
+            background: #1dd1a1;
             color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 20px rgba(0,0,0,0.3);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.5s, transform 0.5s;
@@ -74,17 +88,29 @@
         table {
             margin: 30px auto;
             border-collapse: collapse;
-            width: 90%;
-            background: white;
-            border-radius: 10px;
+            width: 95%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0px 10px 25px rgba(0,0,0,0.2);
         }
-        table th, table td { padding: 15px; text-align: center; }
-        table th { background: #3498db; color: white; font-size: 16px; }
-        table tr:nth-child(even) { background: #f9f9f9; }
-        table tr:hover { background: #f1f1f1; }
-        .highlight { background-color: #d1f7c4 !important; transition: background-color 1s; }
+        table th, table td {
+            padding: 15px;
+            text-align: center;
+            font-size: 16px;
+            transition: background 0.3s, transform 0.3s;
+        }
+        table th {
+            background: linear-gradient(to right, #ff6b6b, #ff4757);
+            color: white;
+            font-weight: bold;
+        }
+        table tr:nth-child(even) { background: linear-gradient(to right, #dff9fb, #c7ecee); }
+        table tr:nth-child(odd) { background: linear-gradient(to right, #f1f2f6, #dfe4ea); }
+        table tr:hover {
+            background: linear-gradient(to right, #ffeaa7, #fab1a0);
+            transform: scale(1.02);
+        }
         .delete-btn, .edit-btn {
             padding: 6px 10px;
             border: none;
@@ -94,11 +120,14 @@
             margin: 0 2px;
             transition: 0.3s;
         }
-        .delete-btn { background: #e74c3c; }
-        .delete-btn:hover { background: #c0392b; }
-        .edit-btn { background: #f39c12; }
-        .edit-btn:hover { background: #d35400; }
-        @media (max-width: 768px) { form, table { width: 95%; } a { margin: 5px; padding: 8px 15px; } }
+        .delete-btn { background: #ee5253; }
+        .delete-btn:hover { background: #c23616; }
+        .edit-btn { background: #feca57; color: #000; }
+        .edit-btn:hover { background: #ff9f43; }
+        @media (max-width: 768px) {
+            form, table { width: 95%; }
+            a { margin: 5px; padding: 8px 15px; }
+        }
     </style>
 </head>
 <body>
@@ -137,6 +166,7 @@
     <table id="studentTable">
         <thead>
             <tr>
+                <th>User ID</th>
                 <th>Name</th>
                 <th>Age</th>
                 <th>Email</th>
@@ -149,11 +179,10 @@
 
     <script>
         let editStudentId = null;
-
         function showToast(message, success=true) {
             const toast = document.getElementById("toast");
             toast.innerText = message;
-            toast.style.background = success ? "#2ecc71" : "#e74c3c";
+            toast.style.background = success ? "#1dd1a1" : "#ee5253";
             toast.classList.add("show");
             setTimeout(() => { toast.classList.remove("show"); }, 3000);
         }
@@ -206,24 +235,19 @@
                 students.forEach(student => {
                     let row = document.createElement("tr");
                     row.innerHTML = `
+                        <td>${student.id}</td>
                         <td>${student.name}</td>
                         <td>${student.age}</td>
                         <td>${student.email}</td>
                         <td>${student.department}</td>
                         <td>
-                            <button class="edit-btn" onclick="editStudent(${student.id})">edit</button>
-                            <button class="delete-btn" onclick="deleteStudent(${student.id})">delete</button>
+                            <button class="edit-btn" onclick="editStudent(${student.id})">✏️</button>
+                            <button class="delete-btn" onclick="deleteStudent(${student.id})">❌</button>
                         </td>
                     `;
                     tbody.appendChild(row);
-                    if (student.id === editStudentId) {
-                        row.classList.add("highlight");
-                        setTimeout(() => row.classList.remove("highlight"), 2000);
-                    }
                 });
-            } catch (err) {
-                console.error("Error loading students:", err);
-            }
+            } catch (err) { console.error("Error loading students:", err); }
         }
 
         function editStudent(id) {
