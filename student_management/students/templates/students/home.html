@@ -95,6 +95,13 @@
             <option value="EEE">Electrical</option>
             <option value="MECH">Mechanical</option>
             <option value="CIVIL">Civil</option>
+            <option value="IT">Information Technology</option>
+            <option value="BIO">Biotechnology</option>
+            <option value="CHEM">Chemical</option>
+            <option value="AERO">Aeronautical</option>
+            <option value="META">Metallurgical</option>
+            <option value="ARCH">Architecture</option>
+            <option value="Kalvium">SPE Kalvium</option>
         </select>
         <button type="submit">Add Student</button>
     </form>
@@ -108,7 +115,7 @@
                 <th>Age</th>
                 <th>Email</th>
                 <th>Department</th>
-                <th>Action</th> <!-- Added column for delete button -->
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -133,7 +140,7 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "X-CSRFToken": getCookie("csrftoken") // required for Django
+                        "X-CSRFToken": getCookie("csrftoken")
                     },
                     body: JSON.stringify(studentData)
                 });
@@ -141,7 +148,7 @@
                 if (response.ok) {
                     document.getElementById("message").innerText = "✅ Student added successfully!";
                     document.getElementById("studentForm").reset();
-                    loadStudents(); // refresh table
+                    loadStudents();
                 } else {
                     let error = await response.json();
                     document.getElementById("message").innerText = "❌ Error: " + JSON.stringify(error);
@@ -169,7 +176,7 @@
                         <td>
                             <button onclick="deleteStudent(${student.id})"
                                     style="background:red;color:white;border:none;padding:5px;border-radius:3px;cursor:pointer;">
-                                ❌
+                                Delete 
                             </button>
                         </td>
                     </tr>`;
@@ -187,14 +194,12 @@
             try {
                 let response = await fetch(`/api/students/${studentId}/`, {
                     method: "DELETE",
-                    headers: {
-                        "X-CSRFToken": getCookie("csrftoken")
-                    }
+                    headers: { "X-CSRFToken": getCookie("csrftoken") }
                 });
 
                 if (response.ok) {
                     document.getElementById("message").innerText = "🗑️ Student deleted successfully!";
-                    loadStudents(); // refresh table
+                    loadStudents();
                 } else {
                     document.getElementById("message").innerText = "❌ Failed to delete student!";
                 }
