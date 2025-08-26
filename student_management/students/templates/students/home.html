@@ -2,86 +2,111 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Student Management API</title>
+    <title>Student Management Dashboard</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 30px;
-            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            color: #333;
         }
-        h1 {
-            color: #2c3e50;
-        }
+        h1 { text-align: center; margin-top: 40px; color: #2c3e50; }
+        h2 { text-align: center; color: #34495e; margin-top: 30px; }
         a {
-            display: block;
+            display: inline-block;
             margin: 10px;
-            padding: 10px;
+            padding: 10px 20px;
             background: #3498db;
             color: white;
             text-decoration: none;
             border-radius: 5px;
-            width: 200px;
-            margin-left: auto;
-            margin-right: auto;
+            transition: 0.3s;
         }
-        a:hover {
-            background: #2980b9;
-        }
+        a:hover { background: #2980b9; }
         form {
-            margin-top: 20px;
             background: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 300px;
-            margin-left: auto;
-            margin-right: auto;
-            box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+            padding: 30px;
+            border-radius: 10px;
+            width: 350px;
+            margin: 20px auto;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
         }
+        form:hover { transform: translateY(-5px); }
         input, select {
             display: block;
             width: 90%;
-            margin: 10px auto;
-            padding: 8px;
-        }
-        button {
+            margin: 12px auto;
             padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        input:focus, select:focus { border-color: #3498db; outline: none; }
+        button {
+            padding: 12px 20px;
             background: #2ecc71;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
         }
-        button:hover {
-            background: #27ae60;
+        button:hover { background: #27ae60; }
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2ecc71;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s, transform 0.5s;
+            z-index: 1000;
         }
-        #message {
-            margin-top: 15px;
-            font-weight: bold;
-        }
+        .toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
         table {
             margin: 30px auto;
             border-collapse: collapse;
-            width: 80%;
+            width: 90%;
             background: white;
-            box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
         }
-        table th, table td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: center;
-        }
-        table th {
-            background: #3498db;
+        table th, table td { padding: 15px; text-align: center; }
+        table th { background: #3498db; color: white; font-size: 16px; }
+        table tr:nth-child(even) { background: #f9f9f9; }
+        table tr:hover { background: #f1f1f1; }
+        .highlight { background-color: #d1f7c4 !important; transition: background-color 1s; }
+        .delete-btn, .edit-btn {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 5px;
             color: white;
+            cursor: pointer;
+            margin: 0 2px;
+            transition: 0.3s;
         }
+        .delete-btn { background: #e74c3c; }
+        .delete-btn:hover { background: #c0392b; }
+        .edit-btn { background: #f39c12; }
+        .edit-btn:hover { background: #d35400; }
+        @media (max-width: 768px) { form, table { width: 95%; } a { margin: 5px; padding: 8px 15px; } }
     </style>
 </head>
 <body>
-    <h1>Welcome to Student Management API</h1>
-    <p>Available endpoints:</p>
-    <a href="/api/students/">Students API</a>
-    <a href="/admin/">Admin Panel</a>
+    <h1>Student Management Dashboard</h1>
+    <p style="text-align:center;">
+        <a href="/api/students/">Students API</a>
+        <a href="/admin/">Admin Panel</a>
+    </p>
 
     <h2>Add a New Student</h2>
     <form id="studentForm">
@@ -103,9 +128,10 @@
             <option value="ARCH">Architecture</option>
             <option value="Kalvium">SPE Kalvium</option>
         </select>
-        <button type="submit">Add Student</button>
+        <button type="submit" id="submitBtn">Add Student</button>
     </form>
-    <p id="message"></p>
+
+    <div class="toast" id="toast"></div>
 
     <h2>Student List</h2>
     <table id="studentTable">
@@ -118,16 +144,22 @@
                 <th>Action</th>
             </tr>
         </thead>
-        <tbody>
-            <!-- Students will be loaded here -->
-        </tbody>
+        <tbody></tbody>
     </table>
 
     <script>
-        // Handle Add Student
+        let editStudentId = null;
+
+        function showToast(message, success=true) {
+            const toast = document.getElementById("toast");
+            toast.innerText = message;
+            toast.style.background = success ? "#2ecc71" : "#e74c3c";
+            toast.classList.add("show");
+            setTimeout(() => { toast.classList.remove("show"); }, 3000);
+        }
+
         document.getElementById("studentForm").addEventListener("submit", async function(e) {
             e.preventDefault();
-
             let studentData = {
                 name: document.getElementById("name").value,
                 age: document.getElementById("age").value,
@@ -136,86 +168,98 @@
             };
 
             try {
-                let response = await fetch("/api/students/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": getCookie("csrftoken")
-                    },
+                let url = "/api/students/";
+                let method = "POST";
+                if (editStudentId) {
+                    url += editStudentId + "/";
+                    method = "PUT";
+                }
+
+                let response = await fetch(url, {
+                    method: method,
+                    headers: { "Content-Type": "application/json", "X-CSRFToken": getCookie("csrftoken") },
                     body: JSON.stringify(studentData)
                 });
 
                 if (response.ok) {
-                    document.getElementById("message").innerText = "✅ Student added successfully!";
+                    showToast(editStudentId ? "✅ Student updated successfully!" : "✅ Student added successfully!");
                     document.getElementById("studentForm").reset();
+                    document.getElementById("submitBtn").innerText = "Add Student";
+                    editStudentId = null;
                     loadStudents();
                 } else {
                     let error = await response.json();
-                    document.getElementById("message").innerText = "❌ Error: " + JSON.stringify(error);
+                    showToast("❌ Error: " + JSON.stringify(error), false);
                 }
-            } catch (err) {
-                document.getElementById("message").innerText = "⚠️ Something went wrong!";
+            } catch {
+                showToast("⚠️ Something went wrong!", false);
             }
         });
 
-        // Load Students from API
         async function loadStudents() {
             try {
                 let response = await fetch("/api/students/");
                 let students = await response.json();
-
                 let tbody = document.querySelector("#studentTable tbody");
                 tbody.innerHTML = "";
 
                 students.forEach(student => {
-                    let row = `<tr>
+                    let row = document.createElement("tr");
+                    row.innerHTML = `
                         <td>${student.name}</td>
                         <td>${student.age}</td>
                         <td>${student.email}</td>
                         <td>${student.department}</td>
                         <td>
-                            <button onclick="deleteStudent(${student.id})"
-                                    style="background:red;color:white;border:none;padding:5px;border-radius:3px;cursor:pointer;">
-                                Delete 
-                            </button>
+                            <button class="edit-btn" onclick="editStudent(${student.id})">edit</button>
+                            <button class="delete-btn" onclick="deleteStudent(${student.id})">delete</button>
                         </td>
-                    </tr>`;
-                    tbody.innerHTML += row;
+                    `;
+                    tbody.appendChild(row);
+                    if (student.id === editStudentId) {
+                        row.classList.add("highlight");
+                        setTimeout(() => row.classList.remove("highlight"), 2000);
+                    }
                 });
             } catch (err) {
                 console.error("Error loading students:", err);
             }
         }
 
-        // Delete student function
-        async function deleteStudent(studentId) {
-            if (!confirm("Are you sure you want to delete this student?")) return;
-
-            try {
-                let response = await fetch(`/api/students/${studentId}/`, {
-                    method: "DELETE",
-                    headers: { "X-CSRFToken": getCookie("csrftoken") }
+        function editStudent(id) {
+            fetch(`/api/students/${id}/`)
+                .then(res => res.json())
+                .then(student => {
+                    document.getElementById("name").value = student.name;
+                    document.getElementById("age").value = student.age;
+                    document.getElementById("email").value = student.email;
+                    document.getElementById("department").value = student.department;
+                    document.getElementById("submitBtn").innerText = "Update Student";
+                    editStudentId = id;
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
+        }
 
+        async function deleteStudent(id) {
+            if (!confirm("Are you sure you want to delete this student?")) return;
+            try {
+                let response = await fetch(`/api/students/${id}/`, { method: "DELETE", headers: { "X-CSRFToken": getCookie("csrftoken") } });
                 if (response.ok) {
-                    document.getElementById("message").innerText = "🗑️ Student deleted successfully!";
+                    showToast("🗑️ Student deleted successfully!");
                     loadStudents();
-                } else {
-                    document.getElementById("message").innerText = "❌ Failed to delete student!";
-                }
-            } catch (err) {
-                document.getElementById("message").innerText = "⚠️ Something went wrong!";
+                } else showToast("❌ Failed to delete student!", false);
+            } catch {
+                showToast("⚠️ Something went wrong!", false);
             }
         }
 
-        // Helper function to get CSRF token from cookies
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== "") {
                 let cookies = document.cookie.split(";");
-                for (let i = 0; i < cookies.length; i++) {
-                    let cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                for (let cookie of cookies) {
+                    cookie = cookie.trim();
+                    if (cookie.startsWith(name + "=")) {
                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                         break;
                     }
@@ -224,7 +268,6 @@
             return cookieValue;
         }
 
-        // Load students when page opens
         loadStudents();
     </script>
 </body>
