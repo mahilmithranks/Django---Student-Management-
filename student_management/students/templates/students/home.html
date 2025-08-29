@@ -5,157 +5,180 @@
     <title>Student Management API</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             background: linear-gradient(to right, #74ebd5, #ACB6E5);
-            min-height: 100vh;
         }
-        h1 { color: #2c3e50; margin-top: 20px; }
-        a {
-            display: inline-block;
-            margin: 10px 10px;
-            padding: 12px 25px;
+
+        h1 {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .top-buttons {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .top-buttons a {
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
             background: #3498db;
             color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: 0.3s;
+            border-radius: 6px;
         }
-        a:hover { background: #2980b9; }
-        form {
-            margin: 30px auto;
+
+        .form-container {
             background: #fff;
-            padding: 30px 20px;
-            border-radius: 12px;
-            width: 350px;
-            box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
-        input, select {
-            display: block;
-            width: 90%;
-            margin: 10px auto;
+
+        .form-container h2 {
+            text-align: center;
+        }
+
+        .form-container input, .form-container select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background: #2ecc71;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .form-container button:hover {
+            background: #27ae60;
+        }
+
+        /* Filters */
+        .filters {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            max-width: 900px;
+        }
+
+        .filters input, .filters select, .filters button {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 14px;
+            min-width: 180px;
         }
-        button {
-            padding: 12px 25px;
-            background: #2ecc71;
+
+        .filters button {
+            background: #3498db;
             color: white;
-            border: none;
-            border-radius: 8px;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 10px;
-            transition: 0.3s;
+            min-width: auto;
         }
-        button:hover { background: #27ae60; }
-        #message {
-            margin-top: 15px;
-            font-weight: bold;
-            color: #e74c3c;
+
+        .filters button:hover {
+            background: #2980b9;
         }
+
         table {
-            margin: 30px auto;
-            border-collapse: collapse;
             width: 90%;
-            max-width: 900px;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0px 5px 15px rgba(0,0,0,0.2);
+            margin: 20px auto;
+            border-collapse: collapse;
         }
-        table th, table td { border: 1px solid #ddd; padding: 12px; text-align: center; }
-        table th { background: #3498db; color: white; font-size: 16px; }
-        table td button {
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #3498db;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .actions button {
             padding: 5px 10px;
+            margin: 2px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 0 2px;
         }
-        .edit-btn { background: #f39c12; color: white; }
-        .edit-btn:hover { background: #e67e22; }
-        .delete-btn { background: #e74c3c; color: white; }
-        .delete-btn:hover { background: #c0392b; }
 
-        /* Toast styles */
-        #toast {
-            visibility: hidden;
-            min-width: 250px;
-            margin-left: -125px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 8px;
-            padding: 16px;
-            position: fixed;
-            z-index: 1000;
-            left: 50%;
-            bottom: 30px;
-            font-size: 17px;
+        .edit-btn {
+            background: #f39c12;
+            color: white;
         }
-        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
-        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
-        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
-        /* Modal styles */
-        #editModal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center; align-items: center;
-        }
-        #editModal div {
-            background: #fff; padding: 30px; border-radius: 12px; width: 350px; position: relative;
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
         }
     </style>
 </head>
 <body>
     <h1>Welcome to Student Management API</h1>
-    <div>
+    <div class="top-buttons">
         <a href="/api/students/">Students API</a>
         <a href="/admin/">Admin Panel</a>
     </div>
 
-    <h2>Add a New Student</h2>
-    <form id="studentForm">
-        <input type="text" id="name" placeholder="Enter name" required>
-        <input type="number" id="age" placeholder="Enter age" required>
-        <input type="email" id="email" placeholder="Enter email" required>
-        <select id="department" required>
+    <!-- Student Form -->
+    <div class="form-container">
+        <h2>Add a New Student</h2>
+        <input type="text" id="name" placeholder="Enter name">
+        <input type="number" id="age" placeholder="Enter age">
+        <input type="email" id="email" placeholder="Enter email">
+        <select id="department">
             <option value="">Select Department</option>
-            <option value="1">CSE</option>
-            <option value="2">ECE</option>
-            <option value="3">EEE</option>
-            <option value="4">MECH</option>
-            <option value="5">CIVIL</option>
-            <option value="6">IT</option>
-            <option value="7">BIO</option>
-            <option value="8">CHEM</option>
-            <option value="9">AERO</option>
-            <option value="10">META</option>
-            <option value="11">ARCH</option>
-            <option value="12">Kalvium</option>
         </select>
-        <select id="course" required>
+        <select id="course">
             <option value="">Select Course</option>
         </select>
-        <button type="submit">Add Student</button>
-    </form>
+        <button onclick="addStudent()">Add Student</button>
+    </div>
 
-    <h2>Student List</h2>
+    <!-- Filters -->
+    <div class="filters">
+        <input type="text" id="searchBox" placeholder="Search by name or email">
+        <select id="deptFilter">
+            <option value="">All Departments</option>
+        </select>
+        <select id="courseFilter">
+            <option value="">All Courses</option>
+        </select>
+        <button onclick="applySearch()">Search</button>
+    </div>
+
+    <!-- Student Table -->
+    <h2 style="text-align:center;">Student List</h2>
     <table id="studentTable">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>S.No</th>
                 <th>Name</th>
                 <th>Age</th>
                 <th>Email</th>
@@ -167,200 +190,138 @@
         <tbody></tbody>
     </table>
 
-    <!-- Edit Student Modal -->
-    <div id="editModal">
-        <div>
-            <h2>Edit Student</h2>
-            <form id="editForm">
-                <input type="hidden" id="editId">
-                <input type="text" id="editName" placeholder="Enter name" required>
-                <input type="number" id="editAge" placeholder="Enter age" required>
-                <input type="email" id="editEmail" placeholder="Enter email" required>
-                <select id="editDepartment" required>
-                    <option value="">Select Department</option>
-                    <option value="1">CSE</option>
-                    <option value="2">ECE</option>
-                    <option value="3">EEE</option>
-                    <option value="4">MECH</option>
-                    <option value="5">CIVIL</option>
-                    <option value="6">IT</option>
-                    <option value="7">BIO</option>
-                    <option value="8">CHEM</option>
-                    <option value="9">AERO</option>
-                    <option value="10">META</option>
-                    <option value="11">ARCH</option>
-                    <option value="12">Kalvium</option>
-                </select>
-                <select id="editCourse" required>
-                    <option value="">Select Course</option>
-                </select>
-                <button type="submit">Update Student</button>
-                <button type="button" style="background:#e74c3c; margin-left:10px;" onclick="closeEditModal()">Cancel</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Toast -->
-    <div id="toast"></div>
-
     <script>
-        function showToast(msg, success=true) {
-            let toast = document.getElementById("toast");
-            toast.innerText = msg;
-            toast.style.backgroundColor = success ? "#2ecc71" : "#e74c3c";
-            toast.className = "show";
-            setTimeout(() => toast.className = toast.className.replace("show",""), 3000);
+        let students = [];
+        let departments = [];
+        let courses = [];
+
+        async function fetchData() {
+            let studentRes = await fetch('/api/students/');
+            students = await studentRes.json();
+
+            let deptRes = await fetch('/api/departments/');
+            departments = await deptRes.json();
+
+            let courseRes = await fetch('/api/courses/');
+            courses = await courseRes.json();
+
+            populateDepartments();
+            populateCourses();
+            renderTable();
         }
 
-        async function loadCourses() {
-            try {
-                let response = await fetch("/api/courses/");
-                let courses = await response.json();
-                let courseSelect = document.getElementById("course");
-                let editCourseSelect = document.getElementById("editCourse");
-                courses.forEach(c => {
-                    let option = document.createElement("option");
-                    option.value = c.id;
-                    option.text = c.name;
-                    courseSelect.appendChild(option);
-                    let editOption = option.cloneNode(true);
-                    editCourseSelect.appendChild(editOption);
-                });
-            } catch (err) { console.error("Failed to load courses:", err); }
+        function populateDepartments() {
+            let deptSelect = document.getElementById('department');
+            let filterSelect = document.getElementById('deptFilter');
+            deptSelect.innerHTML = `<option value="">Select Department</option>`;
+            filterSelect.innerHTML = `<option value="">All Departments</option>`;
+            departments.forEach(d => {
+                let option = new Option(d.name, d.id);
+                deptSelect.add(option.cloneNode(true));
+                filterSelect.add(new Option(d.name, d.id));
+            });
         }
 
-        document.getElementById("studentForm").addEventListener("submit", async function(e) {
-            e.preventDefault();
-            let studentData = {
+        function populateCourses() {
+            let courseSelect = document.getElementById('course');
+            let filterSelect = document.getElementById('courseFilter');
+            courseSelect.innerHTML = `<option value="">Select Course</option>`;
+            filterSelect.innerHTML = `<option value="">All Courses</option>`;
+            courses.forEach(c => {
+                let option = new Option(c.name, c.id);
+                courseSelect.add(option.cloneNode(true));
+                filterSelect.add(new Option(c.name, c.id));
+            });
+        }
+
+        function getDeptName(id) {
+            let dept = departments.find(d => d.id === id);
+            return dept ? dept.name : "—";
+        }
+
+        function getCourseName(id) {
+            let course = courses.find(c => c.id === id);
+            return course ? course.name : "—";
+        }
+
+        function renderTable() {
+            let tbody = document.querySelector("#studentTable tbody");
+            tbody.innerHTML = "";
+
+            let search = document.getElementById("searchBox").value.toLowerCase().trim();
+            let deptFilter = document.getElementById("deptFilter").value;
+            let courseFilter = document.getElementById("courseFilter").value;
+
+            let filtered = students.filter(s => {
+                return (
+                    (search === "" || s.name.toLowerCase().includes(search) || s.email.toLowerCase().includes(search)) &&
+                    (deptFilter === "" || s.department == deptFilter) &&
+                    (courseFilter === "" || s.course == courseFilter)
+                );
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7">No students found</td></tr>`;
+                return;
+            }
+
+            filtered.forEach((s, index) => {
+                let row = `<tr>
+                    <td>${index + 1}</td>
+                    <td>${s.name}</td>
+                    <td>${s.age}</td>
+                    <td>${s.email}</td>
+                    <td>${getDeptName(s.department)}</td>
+                    <td>${getCourseName(s.course)}</td>
+                    <td class="actions">
+                        <button class="edit-btn" onclick="editStudent(${s.id})">✏️</button>
+                        <button class="delete-btn" onclick="deleteStudent(${s.id})">❌</button>
+                    </td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+
+        function applySearch() {
+            renderTable();
+        }
+
+        // Allow Enter key to trigger search
+        document.getElementById("searchBox").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                applySearch();
+            }
+        });
+
+        async function addStudent() {
+            let student = {
                 name: document.getElementById("name").value,
                 age: document.getElementById("age").value,
                 email: document.getElementById("email").value,
-                department: document.getElementById("department").value,
-                course: document.getElementById("course").value
+                department: parseInt(document.getElementById("department").value),
+                course: parseInt(document.getElementById("course").value)
             };
-            try {
-                let response = await fetch("/api/students/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": getCookie("csrftoken")
-                    },
-                    body: JSON.stringify(studentData)
-                });
-                if (response.ok) {
-                    showToast("✅ Student added successfully!");
-                    document.getElementById("studentForm").reset();
-                    loadStudents();
-                } else {
-                    let error = await response.json();
-                    showToast("❌ Error: "+JSON.stringify(error), false);
-                }
-            } catch (err) { showToast("⚠️ Something went wrong!", false); }
-        });
 
-        async function loadStudents() {
-            try {
-                let response = await fetch("/api/students/");
-                let students = await response.json();
-                let tbody = document.querySelector("#studentTable tbody");
-                tbody.innerHTML = "";
-                students.forEach(s => {
-                    let row = `<tr>
-                        <td>${s.id}</td>
-                        <td>${s.name}</td>
-                        <td>${s.age}</td>
-                        <td>${s.email}</td>
-                        <td>${s.department_name}</td>
-                        <td>${s.course_name}</td>
-                        <td>
-                            <button class="edit-btn" onclick="editStudent(${s.id})">✏️</button>
-                            <button class="delete-btn" onclick="deleteStudent(${s.id})">❌</button>
-                        </td>
-                    </tr>`;
-                    tbody.innerHTML += row;
-                });
-            } catch (err) { console.error(err); }
+            await fetch('/api/students/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(student)
+            });
+
+            fetchData();
         }
 
         async function deleteStudent(id) {
-            if(!confirm("Are you sure you want to delete this student?")) return;
-            try {
-                let response = await fetch(`/api/students/${id}/`, {
-                    method: "DELETE",
-                    headers: { "X-CSRFToken": getCookie("csrftoken") }
-                });
-                if(response.ok) { showToast("✅ Student deleted successfully!"); loadStudents(); }
-                else showToast("❌ Failed to delete student!", false);
-            } catch(err) { showToast("⚠️ Something went wrong!", false); }
+            await fetch(`/api/students/${id}/`, { method: 'DELETE' });
+            fetchData();
         }
 
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== "") {
-                document.cookie.split(";").forEach(cookie => {
-                    if (cookie.trim().startsWith(name + "=")) {
-                        cookieValue = decodeURIComponent(cookie.trim().substring(name.length+1));
-                    }
-                });
-            }
-            return cookieValue;
-        }
-
-        // Edit student modal functions
         function editStudent(id) {
-            const student = Array.from(document.querySelectorAll("#studentTable tbody tr"))
-                .find(row => row.cells[0].innerText == id);
-            document.getElementById("editId").value = id;
-            document.getElementById("editName").value = student.cells[1].innerText;
-            document.getElementById("editAge").value = student.cells[2].innerText;
-            document.getElementById("editEmail").value = student.cells[3].innerText;
-
-            const deptName = student.cells[4].innerText;
-            let deptSelect = document.getElementById("editDepartment");
-            Array.from(deptSelect.options).forEach(opt => { opt.selected = (opt.text==deptName); });
-
-            const courseName = student.cells[5].innerText;
-            let courseSelect = document.getElementById("editCourse");
-            Array.from(courseSelect.options).forEach(opt => { opt.selected = (opt.text==courseName); });
-
-            document.getElementById("editModal").style.display = "flex";
+            alert("Edit function coming soon for Student ID: " + id);
         }
 
-        function closeEditModal() { document.getElementById("editModal").style.display = "none"; }
-
-        document.getElementById("editForm").addEventListener("submit", async function(e){
-            e.preventDefault();
-            let id = document.getElementById("editId").value;
-            let studentData = {
-                name: document.getElementById("editName").value,
-                age: document.getElementById("editAge").value,
-                email: document.getElementById("editEmail").value,
-                department: document.getElementById("editDepartment").value,
-                course: document.getElementById("editCourse").value
-            };
-            try {
-                let response = await fetch(`/api/students/${id}/`, {
-                    method:"PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRFToken": getCookie("csrftoken")
-                    },
-                    body: JSON.stringify(studentData)
-                });
-                if(response.ok) {
-                    showToast("✅ Student updated successfully!");
-                    closeEditModal();
-                    loadStudents();
-                } else {
-                    let error = await response.json();
-                    showToast("❌ Error: "+JSON.stringify(error), false);
-                }
-            } catch(err) { showToast("⚠️ Something went wrong!", false); }
-        });
-
-        // Initial load
-        loadCourses();
-        loadStudents();
+        fetchData();
     </script>
 </body>
 </html>
