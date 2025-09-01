@@ -137,6 +137,40 @@
             background: #e74c3c;
             color: white;
         }
+
+        /* Edit Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .modal-content button {
+            margin-top: 10px;
+        }
+
+        .close-btn {
+            background: #e74c3c;
+        }
     </style>
 </head>
 <body>
@@ -190,6 +224,21 @@
         <tbody></tbody>
     </table>
 
+    <!-- Edit Student Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h2>Edit Student</h2>
+            <input type="hidden" id="editId">
+            <input type="text" id="editName" placeholder="Enter name">
+            <input type="number" id="editAge" placeholder="Enter age">
+            <input type="email" id="editEmail" placeholder="Enter email">
+            <select id="editDepartment"></select>
+            <select id="editCourse"></select>
+            <button onclick="updateStudent()">Update</button>
+            <button class="close-btn" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
     <script>
         let students = [];
         let departments = [];
@@ -213,24 +262,30 @@
         function populateDepartments() {
             let deptSelect = document.getElementById('department');
             let filterSelect = document.getElementById('deptFilter');
+            let editDept = document.getElementById('editDepartment');
             deptSelect.innerHTML = `<option value="">Select Department</option>`;
             filterSelect.innerHTML = `<option value="">All Departments</option>`;
+            editDept.innerHTML = `<option value="">Select Department</option>`;
             departments.forEach(d => {
                 let option = new Option(d.name, d.id);
                 deptSelect.add(option.cloneNode(true));
                 filterSelect.add(new Option(d.name, d.id));
+                editDept.add(new Option(d.name, d.id));
             });
         }
 
         function populateCourses() {
             let courseSelect = document.getElementById('course');
             let filterSelect = document.getElementById('courseFilter');
+            let editCourse = document.getElementById('editCourse');
             courseSelect.innerHTML = `<option value="">Select Course</option>`;
             filterSelect.innerHTML = `<option value="">All Courses</option>`;
+            editCourse.innerHTML = `<option value="">Select Course</option>`;
             courses.forEach(c => {
                 let option = new Option(c.name, c.id);
                 courseSelect.add(option.cloneNode(true));
                 filterSelect.add(new Option(c.name, c.id));
+                editCourse.add(new Option(c.name, c.id));
             });
         }
 
@@ -286,7 +341,6 @@
             renderTable();
         }
 
-        // Allow Enter key to trigger search
         document.getElementById("searchBox").addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
                 event.preventDefault();
@@ -318,7 +372,41 @@
         }
 
         function editStudent(id) {
-            alert("Edit function coming soon for Student ID: " + id);
+            let student = students.find(s => s.id === id);
+            if (!student) return;
+
+            document.getElementById("editId").value = student.id;
+            document.getElementById("editName").value = student.name;
+            document.getElementById("editAge").value = student.age;
+            document.getElementById("editEmail").value = student.email;
+            document.getElementById("editDepartment").value = student.department;
+            document.getElementById("editCourse").value = student.course;
+
+            document.getElementById("editModal").style.display = "flex";
+        }
+
+        async function updateStudent() {
+            let id = document.getElementById("editId").value;
+            let updated = {
+                name: document.getElementById("editName").value,
+                age: document.getElementById("editAge").value,
+                email: document.getElementById("editEmail").value,
+                department: parseInt(document.getElementById("editDepartment").value),
+                course: parseInt(document.getElementById("editCourse").value)
+            };
+
+            await fetch(`/api/students/${id}/`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updated)
+            });
+
+            closeModal();
+            fetchData();
+        }
+
+        function closeModal() {
+            document.getElementById("editModal").style.display = "none";
         }
 
         fetchData();
